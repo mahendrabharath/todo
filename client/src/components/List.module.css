@@ -1,0 +1,28 @@
+.wrapper {
+    display: flex;
+    background: #F2F2F2;
+    border-radius: 10px;
+    padding: 10px;
+    width: 90%;
+    margin: 10px;
+}
+
+img.right_arrow {
+    width: 50px;
+}
+
+img.list_icon {
+    height: 100px;
+    width: 100px;
+    background-color: #f3722c;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+div.text_wrapper {
+    width: 100%;
+    padding: 25px;
+    font-weight: 400;
+    font-style: normal;
+    font-family: "Space Mono", monospace;
+}
