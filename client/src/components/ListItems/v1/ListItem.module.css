@@ -1,0 +1,20 @@
+.wrapper {
+    width: 400px;
+    height: 100px;
+    display: flex;
+    flex-direction: row;
+    background: linear-gradient(45deg, #FFE0B2, #FFECB3);
+    margin: 10px;
+    border-radius: 25px;
+    padding: 10px 20px;
+}
+
+.wrapper div:first-child {
+    width: 80%;
+    /* background: #FAFAFA; */
+}
+
+.title {
+    text-align: center;
+    padding: 10px;
+}

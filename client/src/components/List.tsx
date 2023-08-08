@@ -1,6 +1,7 @@
-import React from "react";
+"use client"
+import React, { useEffect } from "react";
 import listStyles from "./List.module.css";
-const Button = ({
+export const Button = ({
   icon,
   text,
   onClick,
@@ -28,7 +29,9 @@ const Button = ({
   </div>
 );
 
-const List = () => (
+const List = () => {
+  
+  return (
   <>
     <Button
       icon="/rocket.svg"
@@ -50,5 +53,6 @@ const List = () => (
     />
   </>
 );
+  }
 
 export default List;
