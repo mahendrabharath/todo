@@ -19,6 +19,12 @@
     height: 400px;
 }
 
+.date_time_title{
+    display: flex;
+    align-items: center;
+    padding: 20px;
+}
+
 /* .main_wrapper>div {
     display: flex;
     width: 100%;

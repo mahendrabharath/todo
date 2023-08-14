@@ -8,12 +8,20 @@ import { BASE_URL, LIST } from "@/configs/constants";
 import { Button as ListButton } from "@/components/List";
 import ListItem from "@/components/ListItems/v1/ListItem";
 
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { StaticDateTimePicker } from "@mui/x-date-pickers/StaticDateTimePicker";
+import moment from "moment";
+
 const Add = () => {
   const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState("");
   const [description, setDesc] = useState("");
   const [list, setList] = useState([]);
   const [toast, setToast] = useState(false);
+  const [showDateTimePicker, setShowDateTimePicket] = useState(false);
+  const [completeBy, setCompleteBy] = useState<number>();
   const router = useRouter();
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -27,7 +35,7 @@ const Add = () => {
 
   const getAllTodo = () => {
     fetch(BASE_URL + LIST, {
-      headers: new Headers({'content-type': 'application/json'}),
+      headers: new Headers({ "content-type": "application/json" }),
     })
       .then((res) => res.json())
       .then((data) => {
@@ -50,6 +58,7 @@ const Add = () => {
       title,
       description,
       status: false,
+      completeBy: moment(completeBy).unix()
     };
     fetch(BASE_URL + LIST, {
       method: "POST",
@@ -125,7 +134,7 @@ const Add = () => {
         <>
           <div>
             <h1>Add Task {loading}</h1>
-            <div style={{ height: "200px", width: "460px" }}>
+            <div style={{ height: "350px", width: "460px" }}>
               <TextField
                 label="Title"
                 helperText="Please enter a task..."
@@ -144,6 +153,34 @@ const Add = () => {
                 fullWidth={true}
                 variant="standard"
               />
+              <div>
+                <LocalizationProvider dateAdapter={AdapterMoment}>
+                  <span className={addStyles.date_time_title}>
+                    <img src="/icons/sand-clock.svg" width={"35px"} />
+                    <p
+                      onClick={() => setShowDateTimePicket(!showDateTimePicker)}
+                    >
+                      Complete: {completeBy && moment(completeBy).fromNow()}
+                    </p>
+                  </span>
+                  {showDateTimePicker && (
+                    <StaticDateTimePicker
+                      orientation="landscape"
+                      onChange={(e) => console.log("change --->>", e)}
+                      onAccept={(e) => {
+                        console.log("accept --->>", e, e?.valueOf());
+                        setCompleteBy(e?.valueOf());
+                        setShowDateTimePicket(false);
+                      }}
+                      onClose={() => {
+                        console.log("--->> close");
+                        setShowDateTimePicket(false);
+                      }}
+                      defaultValue={moment()}
+                    />
+                  )}
+                </LocalizationProvider>
+              </div>
               <Button
                 style={{ margin: "20px" }}
                 onClick={() => addTodo()}
@@ -156,18 +193,22 @@ const Add = () => {
           <div className={addStyles.list_container}>
             <h1>List</h1>
             <div className={addStyles.list_wrapper}>
-              {list.map(({ title, description, status, id }, index) => (
-                <ListItem
-                key={id}
-                  name={title}
-                  description={description}
-                  status={status}
-                  onClick={() => {
-                    console.log(index);
-                    updateTodo(id, { status: !status });
-                  }}
-                />
-              ))}
+              {list.map(
+                ({ title, description, status, id, time = 0, completeBy }, index) => (
+                  <ListItem
+                    key={id}
+                    name={title}
+                    description={description}
+                    status={status}
+                    created={time && time * 1000}
+                    completeBy={completeBy && completeBy * 1000}
+                    onClick={() => {
+                      console.log(index);
+                      updateTodo(id, { status: !status });
+                    }}
+                  />
+                )
+              )}
             </div>
           </div>
         </>
