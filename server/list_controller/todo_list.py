@@ -38,6 +38,7 @@ class ListController:
     
     def updateTodoItem(self):
         req = self.request.copy()
+        req['time'] = get_timestamp()
         taskId = ObjectId(req['id'])
         query={'_id': taskId}
         req.pop('id')

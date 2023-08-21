@@ -14,6 +14,16 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { StaticDateTimePicker } from "@mui/x-date-pickers/StaticDateTimePicker";
 import moment from "moment";
 
+type TToggleEditMode = (
+  id: string,
+  task: {
+    title: string;
+    description: string;
+    status: boolean;
+    completeBy: number;
+  }
+) => void;
+
 const Add = () => {
   const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState("");
@@ -22,7 +32,10 @@ const Add = () => {
   const [toast, setToast] = useState(false);
   const [showDateTimePicker, setShowDateTimePicket] = useState(false);
   const [completeBy, setCompleteBy] = useState<number>();
+  const [editMode, setEditMode] = useState(false);
+  const [editId, setEditId] = useState("");
   const router = useRouter();
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       setLoading(false);
@@ -58,7 +71,7 @@ const Add = () => {
       title,
       description,
       status: false,
-      completeBy: moment(completeBy).unix()
+      completeBy: moment(completeBy).unix(),
     };
     fetch(BASE_URL + LIST, {
       method: "POST",
@@ -106,6 +119,16 @@ const Add = () => {
       });
   };
 
+  const toggleEditMode: TToggleEditMode = (id, listDetail) => {
+    setEditMode(true);
+    setEditId(id)
+    setTitle(listDetail.title);
+    setDesc(listDetail.description);
+    debugger;
+    if (listDetail.completeBy) setCompleteBy(listDetail.completeBy);
+    else setCompleteBy(0)
+  };
+
   return (
     <main className={addStyles.main_wrapper}>
       <Button
@@ -133,7 +156,7 @@ const Add = () => {
       ) : (
         <>
           <div>
-            <h1>Add Task {loading}</h1>
+            <h1>{editMode ? 'Edit' : 'Add'} Task {loading}</h1>
             <div style={{ height: "350px", width: "460px" }}>
               <TextField
                 label="Title"
@@ -160,7 +183,7 @@ const Add = () => {
                     <p
                       onClick={() => setShowDateTimePicket(!showDateTimePicker)}
                     >
-                      Complete: {completeBy && moment(completeBy).fromNow()}
+                      Complete: {completeBy ? moment(completeBy).fromNow() : ''}
                     </p>
                   </span>
                   {showDateTimePicker && (
@@ -183,10 +206,12 @@ const Add = () => {
               </div>
               <Button
                 style={{ margin: "20px" }}
-                onClick={() => addTodo()}
+                onClick={() => {
+                editMode ? updateTodo(editId, {title, description, completeBy: moment(completeBy).unix()}) : addTodo()
+                }}
                 variant="contained"
               >
-                Add
+                {editMode ? 'Edit' : 'Add'}
               </Button>
             </div>
           </div>
@@ -194,7 +219,10 @@ const Add = () => {
             <h1>List</h1>
             <div className={addStyles.list_wrapper}>
               {list.map(
-                ({ title, description, status, id, time = 0, completeBy }, index) => (
+                (
+                  { title, description, status, id, time = 0, completeBy },
+                  index
+                ) => (
                   <ListItem
                     key={id}
                     name={title}
@@ -202,6 +230,14 @@ const Add = () => {
                     status={status}
                     created={time && time * 1000}
                     completeBy={completeBy && completeBy * 1000}
+                    toggleEditMode={() =>
+                      toggleEditMode(id, {
+                        title,
+                        description,
+                        status,
+                        completeBy: completeBy ? completeBy * 1000 : 0,
+                      })
+                    }
                     onClick={() => {
                       console.log(index);
                       updateTodo(id, { status: !status });
@@ -210,16 +246,10 @@ const Add = () => {
                 )
               )}
             </div>
+            <div><img className={addStyles.arrow} src="/icons/down-arrow.svg" width={"35px"} /></div>
           </div>
         </>
       )}
-
-      {/* <ListItem
-        name="Buy news paper"
-        description="Goto the newspaper shop near hanuman temple and buy Hindu paper."
-        status={false}
-        onClick={() => {}}
-      /> */}
       <Snackbar
         style={{ maxWidth: "400px" }}
         open={toast}

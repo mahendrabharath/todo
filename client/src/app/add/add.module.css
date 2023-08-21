@@ -1,28 +1,28 @@
 .main_wrapper {
-    height: 100vh;
-    padding: 100px;
-    margin: 100px;
-    background-color: #f2f2f2;
-    display: flex;
-    width: 100%;
-    justify-content: space-evenly;
-    align-items: center;
+  height: 100vh;
+  padding: 100px;
+  margin: 100px;
+  background-color: #f2f2f2;
+  display: flex;
+  width: 100%;
+  justify-content: space-evenly;
+  align-items: center;
 }
 
 .list_container {
-    width: 35%;
-    padding: 20px;
-    /* margin-top: 250px; */
+  width: 35%;
+  padding: 20px;
+  /* margin-top: 250px; */
 }
 .list_wrapper {
-    overflow-y: scroll;
-    height: 400px;
+  overflow-y: scroll;
+  height: 400px;
 }
 
-.date_time_title{
-    display: flex;
-    align-items: center;
-    padding: 20px;
+.date_time_title {
+  display: flex;
+  align-items: center;
+  padding: 20px;
 }
 
 /* .main_wrapper>div {
@@ -32,3 +32,41 @@
     align-items: center;
     flex-direction: row;
 } */
+
+.arrow {
+  /* // The arrow icon that indicates users can scroll down. It is
+    // built with CSS only */
+  position: absolute;
+  /* z-index: 2;
+  bottom: 16px;
+  left: calc(50% - 1px);
+  width: 3px;
+  height: 16px;
+  background: white; */
+  opacity: 0.5;
+  animation: bounce 1s cubic-bezier(0.19, 0.38, 0, 1) infinite;
+}
+
+/* .arrow::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  bottom: 0;
+  left: -4px;
+  border-bottom: solid white 3px;
+  border-right: solid white 3px;
+
+  transform: rotate(45deg);
+} */
+/* Animation for the arrow */
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(-4px);
+  }
+
+  50% {
+    transform: translateY(4px);
+  }
+}

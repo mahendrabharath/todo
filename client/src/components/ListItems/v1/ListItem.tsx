@@ -5,6 +5,7 @@ import moment from "moment";
 const ListItem = ({
   name,
   onClick,
+  toggleEditMode,
   status = false,
   description = "",
   created = 0,
@@ -13,18 +14,19 @@ const ListItem = ({
   name: string;
   description: string;
   onClick: () => void;
+  toggleEditMode: () => void;
   status: boolean;
   created: number;
   completeBy: number;
 }) => {
   return (
-    <div className={listStyles.wrapper}>
+    <div className={listStyles.wrapper} onClick={() => toggleEditMode()}>
       <div className={listStyles.created}>
         {created ? (
           <>
             <p>
-              {moment(created) .fromNow() .replace("year", "yr")
-              .replace("minutes", "mins")}
+              {moment(created) .fromNow().replace("year", "yr")
+              .replace("minutes", "mins").replace('seconds', 'secs')}
             </p>
             <img src="/icons/clock.svg" width={"35px"} />
           </>
@@ -43,7 +45,7 @@ const ListItem = ({
           <span className={listStyles.completesby__wrapper}>
             <img src="/icons/sand-clock.svg" width={"35px"} />
             <p title={completeBy.toString()} className={listStyles.completesby}>
-              {moment(completeBy).fromNow().replace("year", "yr")}
+             Complete {moment(completeBy).fromNow().replace("year", "yr")}
             </p>
           </span>
         ) : (
