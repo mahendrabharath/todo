@@ -5,7 +5,6 @@ import addStyles from "./add.module.css";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { BASE_URL, LIST } from "@/configs/constants";
-import { Button as ListButton } from "@/components/List";
 import ListItem from "@/components/ListItems/v1/ListItem";
 
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
@@ -21,8 +20,16 @@ type TToggleEditMode = (
     description: string;
     status: boolean;
     completeBy: number;
-  }
+  },
+  mode: boolean
 ) => void;
+
+const defaultTodoList = {
+  title: '',
+  description: '',
+  completeBy: 0,
+  status: false,
+}
 
 const Add = () => {
   const [loading, setLoading] = useState(true);
@@ -119,8 +126,8 @@ const Add = () => {
       });
   };
 
-  const toggleEditMode: TToggleEditMode = (id, listDetail) => {
-    setEditMode(true);
+  const toggleEditMode: TToggleEditMode = (id, listDetail, mode = true) => {
+    setEditMode(mode);
     setEditId(id)
     setTitle(listDetail.title);
     setDesc(listDetail.description);
@@ -207,12 +214,21 @@ const Add = () => {
               <Button
                 style={{ margin: "20px" }}
                 onClick={() => {
-                editMode ? updateTodo(editId, {title, description, completeBy: moment(completeBy).unix()}) : addTodo()
+                  editMode ? updateTodo(editId, { title, description, completeBy: moment(completeBy).unix() }) : addTodo()
                 }}
                 variant="contained"
               >
                 {editMode ? 'Edit' : 'Add'}
               </Button>
+              {editMode ? <Button
+                style={{ margin: "20px" }}
+                onClick={() => {
+                  toggleEditMode('', defaultTodoList, false)
+                }}
+                variant="outlined"
+              >
+                Cancel
+              </Button> : ''}
             </div>
           </div>
           <div className={addStyles.list_container}>
@@ -236,7 +252,7 @@ const Add = () => {
                         description,
                         status,
                         completeBy: completeBy ? completeBy * 1000 : 0,
-                      })
+                      }, true)
                     }
                     onClick={() => {
                       console.log(index);

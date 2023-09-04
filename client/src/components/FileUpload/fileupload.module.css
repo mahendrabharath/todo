@@ -1,0 +1,11 @@
+.fileupload__container {
+    display: flex;
+    flex-direction: column;
+}
+
+.preview__image {
+    width: 350px;
+    border: dotted #4762af;
+    border-radius: 50px;
+    padding: 10px;
+}

@@ -1,11 +1,14 @@
-from flask import Flask, jsonify, request
+from flask import Flask, request
 from flask_cors import CORS, cross_origin
 import pymongo
-from bson import json_util, ObjectId
-import json
+from bson import json_util
 import sys
-sys.path.insert(0, '/Users/bharathmahendra/Bharath/Next/todo/server/list_controller/')
+import pathlib
+projectDir = str(pathlib.Path().parent.resolve())
+print('Path to program ',projectDir)
+sys.path.insert(0, projectDir+'\controller')
 from todo_list import ListController
+from shop import ShoppingListController
 
 to_json = lambda raw:json_util.dumps(raw)
 
@@ -43,3 +46,17 @@ def list_todo():
         newRecord = list_controller.updateTodoItem()
         return newRecord
     # #----- End of PATCH method -----
+    
+@app.route('/shop', methods = ['GET', 'POST', 'PATCH'])
+@cross_origin()
+def list_shop():
+    if request.method == 'GET':
+        allList = ['Test1', 'Test2']
+        return allList, 200
+    #----- End of GET method -----
+    if request.method == 'POST':
+        shop_controller = ShoppingListController(request)
+        shop_controller.set_shop_item()
+        return ['test'], 200
+    #----- End of POST method -----
+ 

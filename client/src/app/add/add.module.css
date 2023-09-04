@@ -10,7 +10,7 @@
 }
 
 .list_container {
-  width: 35%;
+  width: 40%;
   padding: 20px;
   /* margin-top: 250px; */
 }
@@ -24,14 +24,6 @@
   align-items: center;
   padding: 20px;
 }
-
-/* .main_wrapper>div {
-    display: flex;
-    width: 100%;
-    justify-content: space-evenly;
-    align-items: center;
-    flex-direction: row;
-} */
 
 .arrow {
   /* // The arrow icon that indicates users can scroll down. It is

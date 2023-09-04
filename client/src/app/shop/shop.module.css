@@ -1,0 +1,24 @@
+.container {
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+}
+
+.shop__form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.save__button {
+    margin: 15px
+}
+
+.form_list_details {
+    display: flex;
+    flex-direction: column;
+    width: 600px;
+    height: 320px;
+    align-items: flex-start;
+    justify-content: space-evenly;
+}
