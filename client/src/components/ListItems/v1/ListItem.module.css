@@ -85,3 +85,25 @@
     align-items: center;
 }
 
+.completesby__img {
+    width: 35px;
+}
+
+@media only screen and (max-width: 600px) {
+    .wrapper {
+        width: 360px;
+        height: 110px;
+    }
+    .created {
+        font-size: 10px;
+    }
+    .title, .title__wrapper {
+        padding: 0px;
+    }
+    .title {
+        height: 2em;
+    }
+    .completesby__img {
+        width: 25px;
+    }
+  }

@@ -1,0 +1,33 @@
+.container {
+  width: 225px;
+  border: 2px solid;
+  overflow-y: scroll;
+  height: 400px;
+  overflow-x: hidden;
+
+  .image,
+  .image__selected {
+    width: 90%;
+    margin: 10px;
+  }
+
+  .image:hover,
+  .image__selected:hover {
+    transform: scale(1.05);
+    box-shadow: #607d8b 0px 0px 20px 8px;
+  }
+
+  .image__selected {
+    border: #ffeb3b 5px solid;
+    box-shadow: black 5px 5px 20px 3px;
+  }
+  scrollbar-width: thin;
+}
+
+.container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.container::-webkit-scrollbar-thumb {
+  background-color: blue;
+}

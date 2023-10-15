@@ -91,6 +91,10 @@
     text-align: left;
 }
 
+.button_label:hover {
+  cursor: pointer;
+}
+
 .hero_text {
   flex-shrink: 0;
   width: 43%;

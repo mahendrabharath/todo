@@ -1,6 +1,6 @@
 "use client";
 
-import { Alert, Button, Checkbox, Snackbar, TextField } from "@mui/material";
+import { Alert, Button, Checkbox, IconButton, Snackbar, TextField } from "@mui/material";
 import addStyles from "./add.module.css";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -12,6 +12,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { StaticDateTimePicker } from "@mui/x-date-pickers/StaticDateTimePicker";
 import moment from "moment";
+import { DateTimePicker, renderTimeViewClock } from "@mui/x-date-pickers";
 
 type TToggleEditMode = (
   id: string,
@@ -25,11 +26,11 @@ type TToggleEditMode = (
 ) => void;
 
 const defaultTodoList = {
-  title: '',
-  description: '',
+  title: "",
+  description: "",
   completeBy: 0,
   status: false,
-}
+};
 
 const Add = () => {
   const [loading, setLoading] = useState(true);
@@ -128,43 +129,28 @@ const Add = () => {
 
   const toggleEditMode: TToggleEditMode = (id, listDetail, mode = true) => {
     setEditMode(mode);
-    setEditId(id)
+    setEditId(id);
     setTitle(listDetail.title);
     setDesc(listDetail.description);
     debugger;
     if (listDetail.completeBy) setCompleteBy(listDetail.completeBy);
-    else setCompleteBy(0)
+    else setCompleteBy(0);
   };
 
   return (
     <main className={addStyles.main_wrapper}>
-      <Button
-        variant="outlined"
-        color="secondary"
-        onClick={() => router.push("/")}
-        style={{
-          position: "absolute",
-          top: "20px",
-          left: "20px",
-        }}
-        startIcon={
-          <img
-            color="blue"
-            height={"35px"}
-            width={"35px"}
-            src="/arrow-left.svg"
-          />
-        }
-      >
-        Back
-      </Button>
+      <IconButton onClick={() => router.push("/")} className={addStyles.back_button} aria-label="back" color="secondary">
+        <img src='https://www.svgrepo.com/show/465415/left-arrow-circle.svg' />
+      </IconButton>
       {loading ? (
         <h1>Loading...</h1>
       ) : (
         <>
           <div>
-            <h1>{editMode ? 'Edit' : 'Add'} Task {loading}</h1>
-            <div style={{ height: "350px", width: "460px" }}>
+            <h1 className={addStyles.add_form_title}>
+              {editMode ? "Edit" : "Add"} Task {loading}
+            </h1>
+            <div className={addStyles.add_from_container}>
               <TextField
                 label="Title"
                 helperText="Please enter a task..."
@@ -185,50 +171,57 @@ const Add = () => {
               />
               <div>
                 <LocalizationProvider dateAdapter={AdapterMoment}>
-                  <span className={addStyles.date_time_title}>
+                  <DateTimePicker
+                    label="Set time limit"
+                    viewRenderers={{
+                      hours: renderTimeViewClock,
+                      minutes: renderTimeViewClock,
+                      seconds: renderTimeViewClock,
+                    }}
+                    className={addStyles.complete_by_time_picker}
+                    // onChange={e => setCompleteBy(e?.valueOf())}
+                    onAccept={(e) => setCompleteBy(e?.valueOf())}
+                    defaultValue={moment()}
+                  />
+                  <span
+                    onClick={() => setShowDateTimePicket(!showDateTimePicker)}
+                    className={addStyles.date_time_title}
+                  >
                     <img src="/icons/sand-clock.svg" width={"35px"} />
-                    <p
-                      onClick={() => setShowDateTimePicket(!showDateTimePicker)}
-                    >
-                      Complete: {completeBy ? moment(completeBy).fromNow() : ''}
+                    <p className={addStyles.complete_by_text_desc}>
+                      Complete: {completeBy ? moment(completeBy).fromNow() : ""}
                     </p>
                   </span>
-                  {showDateTimePicker && (
-                    <StaticDateTimePicker
-                      orientation="landscape"
-                      onChange={(e) => console.log("change --->>", e)}
-                      onAccept={(e) => {
-                        console.log("accept --->>", e, e?.valueOf());
-                        setCompleteBy(e?.valueOf());
-                        setShowDateTimePicket(false);
-                      }}
-                      onClose={() => {
-                        console.log("--->> close");
-                        setShowDateTimePicket(false);
-                      }}
-                      defaultValue={moment()}
-                    />
-                  )}
                 </LocalizationProvider>
               </div>
               <Button
                 style={{ margin: "20px" }}
                 onClick={() => {
-                  editMode ? updateTodo(editId, { title, description, completeBy: moment(completeBy).unix() }) : addTodo()
+                  editMode
+                    ? updateTodo(editId, {
+                        title,
+                        description,
+                        completeBy: moment(completeBy).unix(),
+                      })
+                    : addTodo();
                 }}
                 variant="contained"
               >
-                {editMode ? 'Edit' : 'Add'}
+                {editMode ? "Edit" : "Add"}
               </Button>
-              {editMode ? <Button
-                style={{ margin: "20px" }}
-                onClick={() => {
-                  toggleEditMode('', defaultTodoList, false)
-                }}
-                variant="outlined"
-              >
-                Cancel
-              </Button> : ''}
+              {editMode ? (
+                <Button
+                  style={{ margin: "20px" }}
+                  onClick={() => {
+                    toggleEditMode("", defaultTodoList, false);
+                  }}
+                  variant="outlined"
+                >
+                  Cancel
+                </Button>
+              ) : (
+                ""
+              )}
             </div>
           </div>
           <div className={addStyles.list_container}>
@@ -247,12 +240,16 @@ const Add = () => {
                     created={time && time * 1000}
                     completeBy={completeBy && completeBy * 1000}
                     toggleEditMode={() =>
-                      toggleEditMode(id, {
-                        title,
-                        description,
-                        status,
-                        completeBy: completeBy ? completeBy * 1000 : 0,
-                      }, true)
+                      toggleEditMode(
+                        id,
+                        {
+                          title,
+                          description,
+                          status,
+                          completeBy: completeBy ? completeBy * 1000 : 0,
+                        },
+                        true
+                      )
                     }
                     onClick={() => {
                       console.log(index);
@@ -262,7 +259,13 @@ const Add = () => {
                 )
               )}
             </div>
-            <div><img className={addStyles.arrow} src="/icons/down-arrow.svg" width={"35px"} /></div>
+            <div className={addStyles.arrow_wrapper}>
+              <img
+                className={addStyles.arrow}
+                src="/icons/down-arrow.svg"
+                width={"35px"}
+              />
+            </div>
           </div>
         </>
       )}

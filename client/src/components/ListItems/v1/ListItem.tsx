@@ -43,7 +43,7 @@ const ListItem = ({
         </p>
         {completeBy ? (
           <span className={listStyles.completesby__wrapper}>
-            <img src="/icons/sand-clock.svg" width={"35px"} />
+            <img className={listStyles.completesby__img} src="/icons/sand-clock.svg" />
             <p title={completeBy.toString()} className={listStyles.completesby}>
              Complete {moment(completeBy).fromNow().replace("year", "yr")}
             </p>

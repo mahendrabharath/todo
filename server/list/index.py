@@ -58,7 +58,8 @@ def list_todo():
 @cross_origin()
 def list_shop():
     if request.method == 'GET':
-        allList = ['Test1', 'Test2']
+        list_controller = ShoppingListController({})
+        allList = list_controller.getAllLists()
         return allList, 200
     # ----- End of GET method -----
     if request.method == 'POST':
@@ -66,3 +67,9 @@ def list_shop():
         shop_controller.set_shop_item()
         return ['test'], 200
     # ----- End of POST method -----
+    if request.method == 'PATCH':
+        print('--->> ',request.get_json())
+        list_controller = ShoppingListController(request.get_json())
+        newRecord = list_controller.updateShopItem()
+        return newRecord
+    # #----- End of PATCH method -----   
