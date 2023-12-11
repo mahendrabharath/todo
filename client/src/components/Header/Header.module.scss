@@ -1,0 +1,14 @@
+.header_wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px;
+
+  .right_wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+  .user_name {
+    color: white
+  }
+}

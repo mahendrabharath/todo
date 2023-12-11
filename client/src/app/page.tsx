@@ -18,9 +18,11 @@ export default function Home() {
                 <p className={styles.button_label}>Start Organizing</p>
               </button>
             </a>
-            <button className={styles.button_learn_more}>
-              <p className={styles.button_label}>Learn More</p>
-            </button>
+            <a href="/shop" >
+              <button className={styles.button_learn_more}>
+                <p className={styles.button_label}>Shopping List</p>
+              </button>
+            </a>
           </div>
         </div>
         <section className={styles.about}>

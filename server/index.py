@@ -1,11 +1,13 @@
 import pathlib
 import sys
-projectDir = str(pathlib.Path().parent.resolve())
-print('Path to program ', projectDir)
-sys.path.insert(0, projectDir+'\controller')
+# projectDir = str(pathlib.Path().parent.resolve())
+# sys.path.insert(0, projectDir+'\controller')
 
-from shop_list import ShoppingListController
-from todo_list import ListController
+from src.controller.shop_list import ShoppingListController
+from src.controller.todo_list import ListController
+from src.controller.users import UsersController
+from src.controller.list_group import ListGroupController
+
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
 import pymongo
@@ -17,7 +19,7 @@ def to_json(raw): return json_util.dumps(raw)
 
 
 app = Flask(__name__)
-cors = CORS(app)
+cors = CORS(app, supports_credentials=True)
 app.config['CORS_HEADERS'] = 'Content-Type'
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 lists_db = myclient["lists"]
@@ -37,8 +39,9 @@ def hello_world():
 @cross_origin()
 def list_todo():
     if request.method == 'GET':
+        listGroupId = request.args.get('listGroupId')
         list_controller = ListController({})
-        allList = list_controller.getAllLists()
+        allList = list_controller.getListByGroupId(listGroupId=listGroupId)
         return allList, 200
     # ----- End of GET method -----
     if request.method == 'POST':
@@ -73,3 +76,28 @@ def list_shop():
         newRecord = list_controller.updateShopItem()
         return newRecord
     # #----- End of PATCH method -----   
+
+
+
+@app.route('/users', methods=['GET', 'POST'])
+@cross_origin()
+def users_shop():
+    if request.method == 'GET':
+        list_controller = ShoppingListController({})
+        allList = list_controller.getAllLists()
+        return allList, 200
+    # ----- End of GET method -----
+    if request.method == 'POST':
+        shop_controller = UsersController(request.get_json())
+        response = shop_controller.createUsers()
+        return response, 200
+    # ----- End of POST method -----
+
+@app.route('/listGroup', methods=['GET', 'POST'])
+@cross_origin()
+def list_group_route():
+    if request.method == 'GET':
+        list_group_controller = ListGroupController(request.get_json())
+        allList = list_group_controller.getListGroupByUserId()
+        return allList, 200
+    # ----- End of GET method -----

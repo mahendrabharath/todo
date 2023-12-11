@@ -1,16 +1,26 @@
 "use client";
 
-import { Alert, Button, Snackbar, TextField } from "@mui/material";
-import addStyles from "./add.module.css";
+import {
+  Alert,
+  Button,
+  Checkbox,
+  IconButton,
+  Snackbar,
+  TextField,
+} from "@mui/material";
+import addStyles from "../add.module.css";
 import { useEffect, useState } from "react";
 import { BASE_URL, LIST } from "@/configs/constants";
 import ListItem from "@/components/ListItems/v1/ListItem";
 
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { StaticDateTimePicker } from "@mui/x-date-pickers/StaticDateTimePicker";
 import moment from "moment";
 import { DateTimePicker, renderTimeViewClock } from "@mui/x-date-pickers";
-import { getLS } from "@/services/localStorage";
+import Header from "@/components/Header/Header";
+import { getLS, setLS } from "@/services/localStorage";
 
 type TToggleEditMode = (
   id: string,
@@ -30,7 +40,7 @@ const defaultTodoList = {
   status: false,
 };
 
-const Add = () => {
+const Add = ({ params }: { params: { id: string } }) => {
   const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState("");
   const [description, setDesc] = useState("");
@@ -40,7 +50,6 @@ const Add = () => {
   const [completeBy, setCompleteBy] = useState<number>();
   const [editMode, setEditMode] = useState(false);
   const [editId, setEditId] = useState("");
-
   useEffect(() => {
     if (typeof window !== "undefined") {
       setLoading(false);
@@ -48,12 +57,16 @@ const Add = () => {
   }, []);
 
   useEffect(() => {
+    debugger;
+    console.log("params", params);
     getAllTodo();
   }, []);
 
   const getAllTodo = () => {
-    fetch(BASE_URL + LIST, {
+    const listGroupId = getLS("listGroupId");
+    fetch(BASE_URL + LIST + "?listGroupId=" + listGroupId, {
       headers: new Headers({ "content-type": "application/json" }),
+      //   body: JSON.stringify({ listGroupId }),
     })
       .then((res) => res.json())
       .then((data) => {
